@@ -60,7 +60,7 @@ export const invalidUser: User = {
     password: string;
 }
 
-export const newValidUser: NewUser = {
+export const newUser: NewUser = {
     firstName: 'Harry',
     lastName: 'Potter',
     dateBirth: '1993-08-24',
@@ -68,9 +68,9 @@ export const newValidUser: NewUser = {
     postalCode: '1431',
     city: 'Ciudad Autónoma Buenos Aires',
     state: 'Buenos Aires',
-    country: 'AR',
+    country: 'Argentina',
     phone: '1166758923',
-    email: 'harrypotter+${Date.now()}@test.com',
-    password: 'PassWord.1234'
+    email: `harrypotter+${Date.now()}${Math.random().toString(36).slice(2)}@test.com`,
+    password: `Test${Date.now()}@Pw!`
 }
 

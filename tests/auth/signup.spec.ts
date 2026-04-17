@@ -1,3 +1,4 @@
+import { newUser } from '../../data/users';
 import { test, expect } from '../../fixtures/pages';
 
 test.describe('UI Validation, all elements are visible', ()=>{
@@ -103,10 +104,37 @@ test.describe('UI Validation, all elements are visible', ()=>{
         await expect (signupPage.registerButton).toBeVisible()
         await expect (signupPage.registerButton).toBeEnabled()
     })
-
-
-
-
-
     
+})
+
+test.describe('New user, Signup success', ()=>{
+    test('Happy Path', async({signupPage})=>{
+        await signupPage.register(newUser.firstName, newUser.lastName, newUser.dateBirth, newUser.street, newUser.postalCode, newUser.city, newUser.state, newUser.country, newUser.phone, newUser.email, newUser.password)
+
+        await expect(signupPage.page).toHaveURL('/auth/login')
+    })
+})
+
+test.describe('Password format validation', ()=>{
+    test('User set a password with > 8 characters long', async({signupPage})=>{
+        await signupPage.register(newUser.firstName, newUser.lastName, newUser.dateBirth, newUser.street, newUser.postalCode, newUser.city, newUser.state, newUser.country, newUser.phone, newUser.email, 'passW1#')
+        
+        await expect(signupPage.page.getByText('Password must be minimal 6 characters long.')).toBeVisible()
+    })
+        test('User set a password without uppercase', async({signupPage})=>{
+        await signupPage.register(newUser.firstName, newUser.lastName, newUser.dateBirth, newUser.street, newUser.postalCode, newUser.city, newUser.state, newUser.country, newUser.phone, newUser.email, 'password1#')
+
+        await expect(signupPage.page.getByText('Password can not include invalid characters.')).toBeVisible()
+    })
+        test('User set a password without lowercase', async({signupPage})=>{
+        await signupPage.register(newUser.firstName, newUser.lastName, newUser.dateBirth, newUser.street, newUser.postalCode, newUser.city, newUser.state, newUser.country, newUser.phone, newUser.email, 'PASSWORD1#')
+
+        await expect(signupPage.page.getByText('Password can not include invalid characters.')).toBeVisible()
+    })
+        test('User set a password without at least one number', async({signupPage})=>{
+        await signupPage.register(newUser.firstName, newUser.lastName, newUser.dateBirth, newUser.street, newUser.postalCode, newUser.city, newUser.state, newUser.country, newUser.phone, newUser.email, 'PassWords#')
+
+        await expect(signupPage.page.getByText('Password can not include invalid characters.')).toBeVisible()
+    })
+
 })
